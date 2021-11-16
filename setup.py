@@ -28,7 +28,7 @@ setup(
     keywords=['python', 'earnapp', 'passive income', 'earnapp api',
               'earnapp dashboard', 'requests', "python earnapp"],
     classifiers=[
-        "Development Status :: 1 - Release",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
