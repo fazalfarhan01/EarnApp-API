@@ -117,31 +117,32 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
     get_referral_info()
     ```
     - Returns an obejct of type `Referrals` with the following attributes.
-    ```TXT
-    referrals
-    referral_earnings
-    total_referral_earnings
-    number_of_referrals
-    ```
-    - The attribute referrals is a list of all the referrals with each object of type `Referee`.
+        Attribute | Description
+        --- | ---
+        `referrals` | `List` of all the referrals with each object of type `Referee`.
+        `referral_earnings` | **Unredeemed** earnings from referrals. (Same as `get_earning_info().bonuses`)
+        `total_referral_earnings` | Total earnings from referrals. (Same as `get_earning_info().bonuses_total`)
+        `number_of_referrals` | Total number of accepted referrals
+    
+
     - The `Referee` object has the following attributes.
-    ```TXT
-    id
-    bonuses
-    bonuses_total
-    email
-    ```
+        Attribute | Description
+        --- | ---
+        `id` | Referral ID.
+        `bonuses` | Unredeemed bonus from referred user.
+        `bonuses_total` | Total bonus from referred user.
+        `email` | Partially hidden referred user's email.
+
 
 ---
 
 ### Exceptions
-The following exceptions are defined.
-
-Exception | Reason
---- | ---
-`AuthenticationError` | Raised on authentication failure.
-`DeviceAddError` | When the attempt to add device is failed.
-`DeviceNotFoundError` | When the device to be added is **not found**.
-`DeviceAlreadyAddedError` | When the device ID is already linked
-`UnKnownDeviceAddError` | When cause of failure is not known.
-`TooManyRequestsError` | Raised when earnapp rate limit is reached.
+- The following exceptions are defined.
+    Exception | Reason
+    --- | ---
+    `AuthenticationError` | Raised on authentication failure.
+    `DeviceAddError` | When the attempt to add device is failed.
+    `DeviceNotFoundError` | When the device to be added is **not found**.
+    `DeviceAlreadyAddedError` | When the device ID is already linked
+    `UnKnownDeviceAddError` | When cause of failure is not known.
+    `TooManyRequestsError` | Raised when earnapp rate limit is reached.
