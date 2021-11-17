@@ -48,6 +48,9 @@ class EarningInfo:
             "tokens", "Error retrieving tokens")
         self.redeem_details = RedeemDetails(
             json_earning_info.get("redeem_details", dict()))
+        self.bonuses = json_earning_info["bonuses"]
+        self.bonuses_total = json_earning_info["bonuses_total"]
+        self.referral_part = json_earning_info["referral_part"]
 
 
 class RedeemDetails:
@@ -105,7 +108,7 @@ class Transaction:
             "payment_date", "Payment not done yet.")
         self.amount = json_transaction.get(
             "money_amount", "Error retrieving payment amount")
-        self.payout_date = json_transaction.get(
+        self.redeem_date = json_transaction.get(
             "date", "Error retrieving payout date")
 
         if self.status == "paid":
@@ -129,12 +132,14 @@ class Transactions:
             else:
                 self.pending_payments += 1
 
+
 class Referee:
     def __init__(self, json_referee_info) -> None:
         self.id = json_referee_info["id"]
         self.bonuses = json_referee_info["bonuses"]
         self.bonuses_total = json_referee_info["bonuses_total"]
         self.email = json_referee_info["email"]
+
 
 class Referrals:
     def __init__(self, json_referees_info) -> None:
@@ -237,4 +242,5 @@ class EarnApp:
             else:
                 return content
         else:
-            raise UnKnownDeviceAddError(f"Failed to add device. Status code: {response.status_code}")
+            raise UnKnownDeviceAddError(
+                f"Failed to add device. Status code: {response.status_code}")
