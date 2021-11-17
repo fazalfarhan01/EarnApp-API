@@ -24,6 +24,7 @@ class EarnAppEndpoints:
         self.devices = urljoin(self.baseURL, "devices")
         self.transaction = urljoin(self.baseURL, "transactions")
         self.add_device = urljoin(self.baseURL, "link_device")
+        self.referrals = urljoin(self.baseURL, "referees")
 
 
 class UserData:
@@ -32,6 +33,7 @@ class UserData:
         self.last_name = json_user_data["last_name"]
         self.name = json_user_data["name"]
         self.email = json_user_data["email"]
+        self.referral_code = json_user_data["referral_code"]
 
 
 class EarningInfo:
@@ -127,6 +129,27 @@ class Transactions:
             else:
                 self.pending_payments += 1
 
+class Referee:
+    def __init__(self, json_referee_info) -> None:
+        self.id = json_referee_info["id"]
+        self.bonuses = json_referee_info["bonuses"]
+        self.bonuses_total = json_referee_info["bonuses_total"]
+        self.email = json_referee_info["email"]
+
+class Referrals:
+    def __init__(self, json_referees_info) -> None:
+        self.referrals = []
+        self.referral_earnings = 0
+        self.total_referral_earnings = 0
+
+        for referee in json_referees_info:
+            self.referrals.append(Referee(referee))
+
+        self.number_of_referrals = len(self.referrals)
+        for referee in self.referrals:
+            self.referral_earnings += referee.bonuses
+            self.total_referral_earnings += referee.bonuses_total
+
 
 class EarnApp:
     def __init__(self, auth_refresh_token) -> None:
@@ -176,6 +199,17 @@ class EarnApp:
             raise AuthenticationError()
         elif response.status_code == 200:
             return Transactions(json.loads(response.content))
+
+    def get_referral_info(self):
+        response = requests.get(
+            self.endpoints.referrals,
+            headers=self.headers.header,
+            params=self.headers.params
+        )
+        if response.status_code == 403:
+            raise AuthenticationError()
+        elif response.status_code == 200:
+            return Referrals(json.loads(response.content))
 
     def add_new_device(self, new_device_id):
         data = {"uuid": new_device_id}

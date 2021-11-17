@@ -13,6 +13,9 @@ AUTH = "YOUR_AUTH_CODE_FROM_EARNAPP_DASHBOARD"
 
 api = EarnApp(AUTH) # Initiallise the EarnApp object
 ```
+
+---
+
 ### Functions
 1. Get information about the user.
     ```PYTHON
@@ -89,6 +92,28 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
     add_new_device("EARNAPP_NODE_ID")
     ```
     - Returns the response from the server on success. Else raise an exception.
+
+6. Get a list of all [referrals](https://earnapp.com/i/GBAVJMH) and their bonuses.
+    ```PYTHON
+    get_referral_info()
+    ```
+    - Returns an obejct of type `Referrals` with the following attributes.
+    ```TXT
+    referrals
+    referral_earnings
+    total_referral_earnings
+    number_of_referrals
+    ```
+    - The attribute referrals is a list of all the referrals with each object of type `Referee`.
+    - The `Referee` object has the following attributes.
+    ```TXT
+    id
+    bonuses
+    bonuses_total
+    email
+    ```
+
+---
 
 ### Exceptions
 The following exceptions are defined.

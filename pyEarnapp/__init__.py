@@ -1,1 +1,1 @@
-from .earnapp import EarnApp, Device, Transaction, RedeemDetails
+from .earnapp import EarnApp, Device, Transaction, RedeemDetails, Referee
