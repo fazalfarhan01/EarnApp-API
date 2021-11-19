@@ -6,7 +6,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 DESCRIPTION = 'UNOFFICIAL Python bindings for Earnapp dashboard API'
 LONG_DESCRIPTION = 'A package that allows you to connect to Earnapp API and interact with your data.'
 
