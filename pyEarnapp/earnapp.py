@@ -25,6 +25,7 @@ class EarnAppEndpoints:
         self.transaction = urljoin(self.baseURL, "transactions")
         self.add_device = urljoin(self.baseURL, "link_device")
         self.referrals = urljoin(self.baseURL, "referees")
+        self.counters = urljoin(self.baseURL, "counters")
 
 
 class UserData:
@@ -55,10 +56,14 @@ class EarningInfo:
 
 class RedeemDetails:
     def __init__(self, json_redeem_details: dict) -> None:
-        self.email = json_redeem_details.get(
-            "email", "Error retrieving payment email")
-        self.payment_method = json_redeem_details.get(
-            "payment_method", "Error retrieving payment method")
+        if json_redeem_details is not None:
+            self.email = json_redeem_details.get(
+                "email", "Error retrieving payment email")
+            self.payment_method = json_redeem_details.get(
+                "payment_method", "Error retrieving payment method")
+        else:
+            self.email = "No email detected"
+            self.payment_method = "No payment method found"
 
 
 class Device:
