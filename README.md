@@ -67,6 +67,7 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
         `windows_devices` | Number of Windows devices.
         `linux_devices` | Number of Linux devices.
         `other_devices` | Number of other type of devices.
+        `total_bandwidth_usage` | Shows bandwidth usage of all devices combined
 
     - The object `Device` has the following attributes.
 
