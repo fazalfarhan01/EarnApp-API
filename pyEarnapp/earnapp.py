@@ -4,6 +4,7 @@ from .tools import *
 from .errors import *
 import json
 import re
+from datetime import datetime, timedelta, timezone
 
 
 class Headers:
@@ -109,12 +110,21 @@ class Transaction:
             "status", "Error retrieving transaction status")
         self.payment_method = json_transaction.get(
             "payment_method", "Payment method not found")
-        self.payment_date = json_transaction.get(
-            "payment_date", "Payment not done yet.")
+
         self.amount = json_transaction.get(
             "money_amount", "Error retrieving payment amount")
-        self.redeem_date = json_transaction.get(
-            "date", "Error retrieving payout date")
+
+        self.redeem_date = datetime.strptime(
+            json_transaction.get("date").replace("Z","UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
+
+        payment_date = json_transaction.get("payment_date")
+
+        if payment_date is None:
+            self.payment_date = self.redeem_date + timedelta(days=9)
+        elif type(payment_date) is str:
+            self.payment_date = datetime.strptime(payment_date.replace("Z","UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
+        else:
+            self.payment_date = datetime.now(timezone.utc)
 
         if self.status == "paid":
             self.is_paid = True
