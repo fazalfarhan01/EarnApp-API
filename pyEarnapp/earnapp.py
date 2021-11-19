@@ -71,7 +71,7 @@ class Device:
     def __init__(self, json_device_info: dict) -> None:
         self.uuid = json_device_info.get("uuid", "Error retrieving UUID")
         self.bandwidth_usage = json_device_info.get(
-            "bw", "Error retrieving usage")
+            "bw", 0)
         self.total_bandwidth = json_device_info.get(
             "total_bw", "Error retrieving total bandwidth")
         self.redeemed_bandwidth = json_device_info.get(
@@ -87,6 +87,7 @@ class DevicesInfo:
         self.windows_devices = 0
         self.linux_devices = 0
         self.other_devices = 0
+        self.total_bandwidth = 0
 
         for device in json_devices_info:
             self.devices.append(Device(device))
@@ -100,6 +101,7 @@ class DevicesInfo:
                 self.linux_devices += 1
             else:
                 self.other_devices += 1
+            self.total_bandwidth += device.bandwidth_usage
 
 
 class Transaction:
