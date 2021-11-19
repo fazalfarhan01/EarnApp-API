@@ -100,9 +100,9 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
         `uuid` | Transaction ID.
         `status` | Status of transaction (`pending`/`paid`).
         `payment_method` | Mode of payment.
-        `payment_date` | Date of payment.
+        `payment_date` | Is an object of type `datetime.datetime`, as date of payment.
         `amount` | Amount redeemed.
-        `redeem_date` | Date on which balance was redeemed.
+        `redeem_date` | Is an object of type `datetime.datetime`, as date on which balance was redeemed.
         `is_paid` | `True` if the payment is completed.
 
 
