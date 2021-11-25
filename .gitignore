@@ -3,3 +3,5 @@
 /dist
 *.egg*
 /main.py
+*.pyc
+__pycache__
