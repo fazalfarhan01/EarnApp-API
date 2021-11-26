@@ -5,7 +5,7 @@ from .errors import *
 import json
 import re
 from datetime import datetime, timedelta, timezone
-from report import report_banned_ip
+from .report import report_banned_ip
 
 class Headers:
     def __init__(self, auth_refresh_token) -> None:
