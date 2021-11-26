@@ -5,7 +5,7 @@ from .errors import *
 import json
 import re
 from datetime import datetime, timedelta, timezone
-
+from report import report_banned_ip
 
 class Headers:
     def __init__(self, auth_refresh_token) -> None:
@@ -92,6 +92,9 @@ class Device:
         self.country = json_device_info.get("cn", "UnKnown")
         self.device_type = re.findall('sdk-([a-zA-Z0-9]*)-', self.uuid)[0]
         self.banned = BanDetails(json_device_info.get('banned', False))
+
+        if self.banned.is_banned:
+            report_banned_ip(self.banned.ip)
 
 class DevicesInfo:
     def __init__(self, json_devices_info: dict):
