@@ -7,6 +7,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from .report import report_banned_ip
 
+
 class Headers:
     def __init__(self, auth_refresh_token) -> None:
         self.params = (
@@ -66,6 +67,7 @@ class RedeemDetails:
             self.email = "No email detected"
             self.payment_method = "No payment method found"
 
+
 class BanDetails:
     def __init__(self, ban_info) -> None:
         if ban_info is False:
@@ -79,8 +81,9 @@ class BanDetails:
             self.ip = ban_info['ip']
             self.details = ban_info['details']
 
+
 class Device:
-    def __init__(self, json_device_info: dict):
+    def __init__(self, json_device_info: dict, report_banned_ip):
         self.uuid = json_device_info.get("uuid", "Error retrieving UUID")
         self.bandwidth_usage = json_device_info.get(
             "bw", 0)
@@ -92,12 +95,13 @@ class Device:
         self.country = json_device_info.get("cn", "UnKnown")
         self.device_type = re.findall('sdk-([a-zA-Z0-9]*)-', self.uuid)[0]
         self.banned = BanDetails(json_device_info.get('banned', False))
+        if report_banned_ip:
+            if self.banned.is_banned:
+                report_banned_ip(self.banned.ip)
 
-        if self.banned.is_banned:
-            report_banned_ip(self.banned.ip)
 
 class DevicesInfo:
-    def __init__(self, json_devices_info: dict):
+    def __init__(self, json_devices_info: dict, report_banned_ip):
         self.devices = []
         self.windows_devices = 0
         self.linux_devices = 0
@@ -106,7 +110,7 @@ class DevicesInfo:
         self.total_bandwidth_usage = 0
 
         for device in json_devices_info:
-            self.devices.append(Device(device))
+            self.devices.append(Device(device, report_banned_ip))
 
         self.total_devices = len(self.devices)
 
@@ -135,14 +139,15 @@ class Transaction:
             "money_amount", "Error retrieving payment amount")
 
         self.redeem_date = datetime.strptime(
-            json_transaction.get("date").replace("Z","UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
+            json_transaction.get("date").replace("Z", "UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
 
         payment_date = json_transaction.get("payment_date")
 
         if payment_date is None:
             self.payment_date = self.redeem_date + timedelta(days=9)
         elif type(payment_date) is str:
-            self.payment_date = datetime.strptime(payment_date.replace("Z","UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
+            self.payment_date = datetime.strptime(
+                payment_date.replace("Z", "UTC"), "%Y-%m-%dT%H:%M:%S.%f%Z")
         else:
             self.payment_date = datetime.now(timezone.utc)
 
@@ -192,9 +197,10 @@ class Referrals:
 
 
 class EarnApp:
-    def __init__(self, auth_refresh_token) -> None:
+    def __init__(self, auth_refresh_token, report_banned_ip: bool = False) -> None:
         self.headers = Headers(auth_refresh_token)
         self.endpoints = EarnAppEndpoints()
+        self.report_banned_ip = report_banned_ip
 
     def get_user_data(self):
         response = requests.get(
@@ -227,7 +233,7 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 200:
-            return DevicesInfo(json.loads(response.content))
+            return DevicesInfo(json.loads(response.content), self.report_banned_ip)
 
     def get_transaction_info(self):
         response = requests.get(
