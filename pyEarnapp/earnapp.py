@@ -83,7 +83,7 @@ class BanDetails:
 
 
 class Device:
-    def __init__(self, json_device_info: dict, report_ip_ban):
+    def __init__(self, json_device_info: dict):
         self.uuid = json_device_info.get("uuid", "Error retrieving UUID")
         self.bandwidth_usage = json_device_info.get(
             "bw", 0)
@@ -95,9 +95,6 @@ class Device:
         self.country = json_device_info.get("cn", "UnKnown")
         self.device_type = re.findall('sdk-([a-zA-Z0-9]*)-', self.uuid)[0]
         self.banned = BanDetails(json_device_info.get('banned', False))
-        if report_ip_ban:
-            if self.banned.is_banned:
-                report_banned_ip(self.banned.ip)
 
 
 class DevicesInfo:
@@ -110,10 +107,11 @@ class DevicesInfo:
         self.total_bandwidth_usage = 0
 
         for device in json_devices_info:
-            self.devices.append(Device(device, report_ip_ban))
+            self.devices.append(Device(device))
 
         self.total_devices = len(self.devices)
 
+        self.banned_ip_addresses = []
         for device in self.devices:
             if device.device_type == "win":
                 self.windows_devices += 1
@@ -124,6 +122,9 @@ class DevicesInfo:
             self.total_bandwidth_usage += device.bandwidth_usage
             if device.banned.is_banned:
                 self.banned_devices += 1
+                self.banned_ip_addresses.append(device.banned.ip)
+        if report_ip_ban:
+            report_banned_ip(self.banned_ip_addresses)
 
 
 class Transaction:
