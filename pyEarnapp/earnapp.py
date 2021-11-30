@@ -51,8 +51,8 @@ class EarningInfo:
             "tokens", "Error retrieving tokens")
         self.redeem_details = RedeemDetails(
             json_earning_info.get("redeem_details", dict()))
-        self.bonuses = json_earning_info["bonuses"]
-        self.bonuses_total = json_earning_info["bonuses_total"]
+        self.bonuses = json_earning_info["ref_bonuses"]
+        self.bonuses_total = json_earning_info["ref_bonuses_total"]
         self.referral_part = json_earning_info["referral_part"]
 
 
