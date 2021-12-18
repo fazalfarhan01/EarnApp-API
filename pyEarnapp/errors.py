@@ -21,3 +21,15 @@ class UnKnownDeviceAddError(DeviceAddError):
 class TooManyRequestsError(DeviceAddError):
     def __init__(self) -> None:
         super().__init__("EarnApp doesn't allow you to add many devices at time. Try adding delay in sending requests")
+
+class IPCheckError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class UnKnownIPCheckError(IPCheckError):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class InValidIPAddressError(IPCheckError):
+    def __init__(self, *args: object) -> None:
+        super().__init__("The IP Address is not valid.", *args)
