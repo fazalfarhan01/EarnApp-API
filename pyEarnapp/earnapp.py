@@ -34,11 +34,11 @@ class EarnAppEndpoints:
 
 class UserData:
     def __init__(self, json_user_data: dict) -> None:
-        self.first_name = json_user_data["first_name"]
-        self.last_name = json_user_data["last_name"]
-        self.name = json_user_data["name"]
-        self.email = json_user_data["email"]
-        self.referral_code = json_user_data["referral_code"]
+        self.first_name = json_user_data.get("first_name", None)
+        self.last_name = json_user_data.get("last_name", None)
+        self.name = json_user_data.get("name", None)
+        self.email = json_user_data.get("email", None)
+        self.referral_code = json_user_data.get("referral_code", None)
 
 
 class EarningInfo:
@@ -53,9 +53,9 @@ class EarningInfo:
             "tokens", "Error retrieving tokens")
         self.redeem_details = RedeemDetails(
             json_earning_info.get("redeem_details", dict()))
-        self.bonuses = json_earning_info["ref_bonuses"]
-        self.bonuses_total = json_earning_info["ref_bonuses_total"]
-        self.referral_part = json_earning_info["referral_part"]
+        self.bonuses = json_earning_info.get("ref_bonuses", 0)
+        self.bonuses_total = json_earning_info.get("ref_bonuses_total", 0)
+        self.referral_part = json_earning_info.get("referral_part", 0)
 
 
 class RedeemDetails:
@@ -79,9 +79,9 @@ class BanDetails:
             self.details = None
         else:
             self.is_banned = True
-            self.reason = ban_info['reason']
-            self.ip = ban_info['ip']
-            self.details = ban_info['details']
+            self.reason = ban_info.get('reason')
+            self.ip = ban_info.get('ip')
+            self.details = ban_info.get('details')
 
 
 class Device:
@@ -177,11 +177,11 @@ class Transactions:
 
 
 class Referee:
-    def __init__(self, json_referee_info) -> None:
-        self.id = json_referee_info["id"]
-        self.bonuses = json_referee_info["bonuses"]
-        self.bonuses_total = json_referee_info["bonuses_total"]
-        self.email = json_referee_info["email"]
+    def __init__(self, json_referee_info: dict) -> None:
+        self.id = json_referee_info.get("id")
+        self.bonuses = json_referee_info.get("bonuses")
+        self.bonuses_total = json_referee_info.get("bonuses_total")
+        self.email = json_referee_info.get("email")
 
 
 class Referrals:
@@ -295,12 +295,12 @@ class EarnApp:
             raise UnKnownDeviceAddError(
                 f"Failed to add device. Status code: {response.status_code}")
 
-    def delete_device(self, device_uuid:str, *args, **kwargs):
+    def delete_device(self, device_uuid: str, *args, **kwargs):
         response = requests.delete(
             urljoin(self.endpoints.device, device_uuid),
             headers=self.headers.header,
-            params=self.headers.params, 
-            *args, 
+            params=self.headers.params,
+            *args,
             **kwargs
         )
         if response.status_code == 403:
@@ -318,7 +318,7 @@ class EarnApp:
             raise UnKnownDeviceAddError(
                 f"Failed to delete device. Status code: {response.status_code}")
 
-    def check_ip_validity(self, ip_address:str, *args, **kwargs):
+    def check_ip_validity(self, ip_address: str, *args, **kwargs):
         if not is_a_valid_ip(ip_address):
             raise InValidIPAddressError()
         response = requests.post(
