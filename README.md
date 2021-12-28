@@ -6,10 +6,22 @@ A Python binding to interact with Earnapp dashboard API.
 ```BASH
 pip install pyEarnapp
 ```
+
+## Get Auth-Token
+1. Go to the EarnApp [Dashboard](https://earnapp.com/dashboard/)
+2. Login with Google
+3. Open Developer tools
+4. Get the value from the cookie `oauth-refresh-token`
+5. Thats your token
+
+Example-Token: 1%2F%2F0dVdcqJC..........
+
+Click [here](https://github.com/Yariya/EarnApp-Earning-Monitor#how-to-get-google-auth) for more information
+
 ## Usage
 ```PYTHON
 from pyEarnapp import EarnApp
-AUTH = "YOUR_AUTH_CODE_FROM_EARNAPP_DASHBOARD"
+AUTH = "YOUR_AUTH_TOKEN"
 
 api = EarnApp(AUTH) # Initiallise the EarnApp object
 ```
