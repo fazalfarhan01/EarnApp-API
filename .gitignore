@@ -5,3 +5,5 @@
 /main.py
 *.pyc
 __pycache__
+/*.py
+!/setup.py
