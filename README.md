@@ -14,7 +14,23 @@ AUTH = "YOUR_AUTH_CODE_FROM_EARNAPP_DASHBOARD"
 api = EarnApp(AUTH) # Initiallise the EarnApp object
 ```
 
+### To use API with proxies
+```PYTHON
+from pyEarnapp import EarnApp
+AUTH = "YOUR_AUTH_CODE_FROM_EARNAPP_DASHBOARD"
+
+api = EarnApp(AUTH)
+proxy_conf = {
+        'http': socks5://username:password@ipaddress:port,
+        'https': socks5://username:password@ipaddress:port,
+    }
+earning_info = api.get_user_data(proxies=proxy_conf)
+```
+
+All additional arguements are passed on to the `requests.method` call.
+
 ---
+
 
 ### Functions
 1. Get information about the user.
@@ -134,6 +150,24 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
         `bonuses_total` | Total bonus from referred user.
         `email` | Partially hidden referred user's email.
 
+7. Delete linked device
+    ```PYTHON
+    delete_device(device_uuid = 'sdk-node-adfbafdnbasgnb')
+    ```
+    - Returns `true` when deleted, else `False`
+
+8. Check if IP Address is usable on earnapp
+    ```python
+    is_ip_allowed()
+    ```
+    - Returns `true` if IP Address is allowed, else `false`.
+
+9. Redeem balance to PayPal
+    ```python
+    redeem_to_paypal(paypal_email = 'someone@example.com')
+    ```
+    - Returns `true` on successfull redeem, else `False`.
+
 
 ---
 
@@ -147,3 +181,7 @@ api = EarnApp(AUTH) # Initiallise the EarnApp object
     `DeviceAlreadyAddedError` | When the device ID is already linked
     `UnKnownDeviceAddError` | When cause of failure is not known.
     `TooManyRequestsError` | Raised when earnapp rate limit is reached.
+    `UnKnownIPCheckError` | Raised when there's an error checking if the IP address is valid.
+    `InValidIPAddressError` | Raised when the IP address is invalid.
+    `UnKnownRedeemError` | When unknown error occurs on redeption.
+    `MinimumRedeemBalanceError` | When account doesn't have minimum balance needed for redeeming.

@@ -33,3 +33,15 @@ class UnKnownIPCheckError(IPCheckError):
 class InValidIPAddressError(IPCheckError):
     def __init__(self, *args: object) -> None:
         super().__init__("The IP Address is not valid.", *args)
+
+class RedeemError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class UnKnownRedeemError(RedeemError):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class MinimumRedeemBalanceError(RedeemError):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
