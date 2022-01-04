@@ -1,3 +1,3 @@
 from .earnapp import EarnApp, Device, Transaction, RedeemDetails, Referee
-VERSION = '0.0.15'
+VERSION = '0.0.15.1'
 print(f"API Version: {VERSION}")
