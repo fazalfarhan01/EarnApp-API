@@ -1,7 +1,6 @@
 import requests
 from urllib.parse import urljoin
 import json
-import re
 
 from .tools import *
 from .errors import *
