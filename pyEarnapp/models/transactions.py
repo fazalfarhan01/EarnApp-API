@@ -21,7 +21,8 @@ class Transaction:
             "status", "Error retrieving transaction status")
         self.payment_method = json_transaction.get(
             "payment_method", "Payment method not found")
-
+        self.email = json_transaction.get(
+            "email", "No redeem email found.")
         self.amount = json_transaction.get(
             "money_amount", "Error retrieving payment amount")
 
