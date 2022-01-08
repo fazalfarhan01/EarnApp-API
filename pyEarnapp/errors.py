@@ -3,44 +3,56 @@ class AuthenticationError(Exception):
         message = "Error authenticating. Enter a proper oauth-refresh-token"
         super().__init__(message)
 
+
 class DeviceAddError(Exception):
-    pass
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 
 class DeviceNotFoundError(DeviceAddError):
-    def __init__(self, error_message) -> None:
-        super().__init__(error_message)
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 
 class DeviceAlreadyAddedError(DeviceAddError):
-    def __init__(self, error_message) -> None:
-        super().__init__(error_message)
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 
 class UnKnownDeviceAddError(DeviceAddError):
-    def __init__(self, error_message) -> None:
-        super().__init__(error_message)
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 
 class TooManyRequestsError(DeviceAddError):
-    def __init__(self) -> None:
-        super().__init__("EarnApp doesn't allow you to add many devices at time. Try adding delay in sending requests")
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 
 class IPCheckError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
+
 class UnKnownIPCheckError(IPCheckError):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
+
 
 class InValidIPAddressError(IPCheckError):
     def __init__(self, *args: object) -> None:
         super().__init__("The IP Address is not valid.", *args)
 
+
 class RedeemError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
+
 class UnKnownRedeemError(RedeemError):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
+
 
 class MinimumRedeemBalanceError(RedeemError):
     def __init__(self, *args: object) -> None:

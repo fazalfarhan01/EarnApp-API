@@ -12,6 +12,7 @@ from .models.user import *
 from .models.header import *
 from .models.earnings import *
 
+
 class EarnApp:
     def __init__(self, auth_refresh_token, report_ip_ban: bool = False) -> None:
         self.headers = Headers(auth_refresh_token)
@@ -91,7 +92,7 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError()
+            raise TooManyRequestsError("EarnApp doesn't allow you to add many devices at time. Try adding delay in sending requests")
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -119,7 +120,7 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError()
+            raise TooManyRequestsError(f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -136,15 +137,13 @@ class EarnApp:
             raise InValidIPAddressError()
         response = requests.post(
             urljoin(self.endpoints.check_ip, ip_address),
-            headers=self.headers.header,
-            params=self.headers.params,
             *args,
             **kwargs
         )
         if response.status_code == 403:
             raise AuthenticationError()
-        elif response.status_code == 429:
-            raise TooManyRequestsError()
+        elif response.status_code in [429, 423]:
+            raise TooManyRequestsError(f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -174,7 +173,7 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError()
+            raise TooManyRequestsError(f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -186,4 +185,4 @@ class EarnApp:
                 return content
         else:
             raise UnKnownRedeemError(
-                f"Failed to redeem balance. Status code: {response.status_code}")
+                f"Failed to redeem balance. Status code: {response.status_code} Response: {response.content}")
