@@ -52,7 +52,8 @@ class DevicesInfo:
                 self.linux_devices += 1
             else:
                 self.other_devices += 1
-            self.total_bandwidth_usage += device.bandwidth_usage
+            if device.bandwidth_usage is not None:
+                self.total_bandwidth_usage += device.bandwidth_usage
             if device.banned.is_banned:
                 self.banned_devices += 1
                 self.banned_ip_addresses.append(device.banned.ip)
