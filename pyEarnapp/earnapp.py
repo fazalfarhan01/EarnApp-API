@@ -135,7 +135,7 @@ class EarnApp:
     def is_ip_allowed(self, ip_address: str, *args, **kwargs):
         if not is_a_valid_ip(ip_address):
             raise InValidIPAddressError()
-        response = requests.post(
+        response = requests.get(
             urljoin(self.endpoints.check_ip, ip_address),
             *args,
             **kwargs
