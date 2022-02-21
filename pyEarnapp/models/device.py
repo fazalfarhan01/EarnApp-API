@@ -1,5 +1,6 @@
 from ..report import report_banned_ip
 import re
+import requests
 
 class BanDetails:
     def __init__(self, ban_info) -> None:
@@ -18,8 +19,7 @@ class BanDetails:
 class Device:
     def __init__(self, json_device_info: dict):
         self.uuid = json_device_info.get("uuid", "Error retrieving UUID")
-        self.bandwidth_usage = json_device_info.get(
-            "bw", 0)
+        self.bandwidth_usage = json_device_info.get("bw", 0)
         self.total_bandwidth_usage = json_device_info.get(
             "total_bw", "Error retrieving total bandwidth")
         self.redeemed_bandwidth = json_device_info.get(
@@ -31,7 +31,7 @@ class Device:
 
 
 class DevicesInfo:
-    def __init__(self, json_devices_info: dict, report_ip_ban):
+    def __init__(self, json_devices_info: dict, report_ip_ban, device_statuses):
         self.devices = []
         self.windows_devices = 0
         self.linux_devices = 0
@@ -58,3 +58,6 @@ class DevicesInfo:
                 self.banned_ip_addresses.append(device.banned.ip)
         if report_ip_ban:
             report_banned_ip(self.banned_ip_addresses)
+
+    def get_devices(self) -> list[Device]:
+        return self.devices

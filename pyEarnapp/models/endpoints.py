@@ -14,3 +14,4 @@ class EarnAppEndpoints:
         self.device = urljoin(self.baseURL, "device/")
         self.check_ip = urljoin(self.baseURL, "check_ip/")
         self.redeem = urljoin(self.baseURL, "redeem/")
+        self.device_status = urljoin(self.baseURL, 'device_statuses')

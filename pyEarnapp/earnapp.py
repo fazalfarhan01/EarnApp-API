@@ -20,7 +20,7 @@ class EarnApp:
         self.report_ip_ban = report_ip_ban
         self.minimum_redeem_balance = 5
 
-    def get_user_data(self, *args, **kwargs):
+    def get_user_data(self, *args, **kwargs) -> UserData:
         response = requests.get(
             self.endpoints.userData,
             headers=self.headers.header,
@@ -33,7 +33,7 @@ class EarnApp:
         elif response.status_code == 200:
             return UserData(json.loads(response.content))
 
-    def get_earning_info(self, *args, **kwargs):
+    def get_earning_info(self, *args, **kwargs) -> EarningInfo:
         response = requests.get(
             self.endpoints.money,
             headers=self.headers.header,
@@ -46,9 +46,16 @@ class EarnApp:
         elif response.status_code == 200:
             return EarningInfo(json.loads(response.content))
 
-    def get_devices_info(self, *args, **kwargs):
+    def get_devices_info(self, *args, **kwargs) -> DevicesInfo:
         response = requests.get(
             self.endpoints.devices,
+            headers=self.headers.header,
+            params=self.headers.params,
+            *args,
+            **kwargs
+        )
+        device_statuses = requests.post(
+            self.endpoints.device_status,
             headers=self.headers.header,
             params=self.headers.params,
             *args,
@@ -57,9 +64,9 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 200:
-            return DevicesInfo(json.loads(response.content), self.report_ip_ban)
+            return DevicesInfo(json.loads(response.content), self.report_ip_ban, device_statuses)
 
-    def get_transaction_info(self, *args, **kwargs):
+    def get_transaction_info(self, *args, **kwargs) -> Transactions:
         response = requests.get(
             self.endpoints.transaction,
             headers=self.headers.header,
@@ -70,7 +77,7 @@ class EarnApp:
         elif response.status_code == 200:
             return Transactions(json.loads(response.content))
 
-    def get_referral_info(self, *args, **kwargs):
+    def get_referral_info(self, *args, **kwargs) -> Referrals:
         response = requests.get(
             self.endpoints.referrals,
             headers=self.headers.header,
@@ -92,7 +99,8 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError("EarnApp doesn't allow you to add many devices at time. Try adding delay in sending requests")
+            raise TooManyRequestsError(
+                "EarnApp doesn't allow you to add many devices at time. Try adding delay in sending requests")
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -109,7 +117,7 @@ class EarnApp:
             raise UnKnownDeviceAddError(
                 f"Failed to add device. Status code: {response.status_code}")
 
-    def delete_device(self, device_uuid: str, *args, **kwargs):
+    def delete_device(self, device_uuid: str, *args, **kwargs) -> bool:
         response = requests.delete(
             urljoin(self.endpoints.device, device_uuid),
             headers=self.headers.header,
@@ -120,7 +128,8 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError(f'Response: {response.content.decode()}')
+            raise TooManyRequestsError(
+                f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -132,7 +141,7 @@ class EarnApp:
             raise UnKnownDeviceAddError(
                 f"Failed to delete device. Status code: {response.status_code}")
 
-    def is_ip_allowed(self, ip_address: str, *args, **kwargs):
+    def is_ip_allowed(self, ip_address: str, *args, **kwargs) -> bool:
         if not is_a_valid_ip(ip_address):
             raise InValidIPAddressError()
         response = requests.get(
@@ -143,7 +152,8 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code in [429, 423]:
-            raise TooManyRequestsError(f'Response: {response.content.decode()}')
+            raise TooManyRequestsError(
+                f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -155,7 +165,7 @@ class EarnApp:
             raise UnKnownIPCheckError(
                 f"Failed to check IP Address: {ip_address}. Status code: {response.status_code}")
 
-    def redeem_to_paypal(self, paypal_email: str, *args, **kwargs):
+    def redeem_to_paypal(self, paypal_email: str, *args, **kwargs) -> bool:
         current_balance = self.get_earning_info(*args, **kwargs).balance
         if not current_balance > self.minimum_redeem_balance:
             raise MinimumRedeemBalanceError(
@@ -173,7 +183,8 @@ class EarnApp:
         if response.status_code == 403:
             raise AuthenticationError()
         elif response.status_code == 429:
-            raise TooManyRequestsError(f'Response: {response.content.decode()}')
+            raise TooManyRequestsError(
+                f'Response: {response.content.decode()}')
         elif response.status_code == 200:
             content = json.loads(response.content)
             error_message = content.get("error", None)
@@ -186,3 +197,37 @@ class EarnApp:
         else:
             raise UnKnownRedeemError(
                 f"Failed to redeem balance. Status code: {response.status_code} Response: {response.content}")
+
+    def get_device_statuses(self) -> dict:
+        devices = self.get_devices_info().get_devices()
+        self.__status_payload = []
+
+        for device in devices:
+            self.__status_payload.append({
+                "uuid": device.uuid,
+                "appid": "node_earnapp.com"
+            })
+
+        response = requests.post(
+            self.endpoints.device_status,
+            headers=self.headers.header,
+            params=self.headers.params,
+            json={'list': self.__status_payload}
+        )
+
+        if response.status_code == 403:
+            raise AuthenticationError()
+        elif response.status_code == 429:
+            raise TooManyRequestsError(
+                f'Response: {response.content.decode()}')
+        elif response.status_code == 200:
+            content = json.loads(response.content)
+            error_message = content.get("error", None)
+            if error_message:
+                raise UnKnownError(error_message)
+            else:
+                return content['statuses']
+        else:
+            raise UnKnownError(
+                "Failed to get device statuses. Status code: {response.status_code} Response: {response.content}")
+        

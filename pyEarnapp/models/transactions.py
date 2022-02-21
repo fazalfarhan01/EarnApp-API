@@ -59,3 +59,6 @@ class Transactions:
                 self.paid += 1
             else:
                 self.pending_payments += 1
+    
+    def get_transactions(self)->list[Transaction]:
+        return self.transactions

@@ -1,3 +1,7 @@
+class UnKnownError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
 class AuthenticationError(Exception):
     def __init__(self) -> None:
         message = "Error authenticating. Enter a proper oauth-refresh-token"
