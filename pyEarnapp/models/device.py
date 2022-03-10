@@ -1,5 +1,6 @@
 from ..report import report_banned_ip
 import re
+from typing import List
 import requests
 
 class BanDetails:
@@ -59,5 +60,5 @@ class DevicesInfo:
         if report_ip_ban:
             report_banned_ip(self.banned_ip_addresses)
 
-    def get_devices(self) -> list[Device]:
+    def get_devices(self) -> List[Device]:
         return self.devices

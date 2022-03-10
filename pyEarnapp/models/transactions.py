@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from typing import List
 
 
 class RedeemDetails:
@@ -60,5 +61,5 @@ class Transactions:
             else:
                 self.pending_payments += 1
     
-    def get_transactions(self)->list[Transaction]:
+    def get_transactions(self)->List[Transaction]:
         return self.transactions
