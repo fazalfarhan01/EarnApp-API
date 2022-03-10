@@ -1,7 +1,6 @@
 from ..report import report_banned_ip
 import re
 from typing import List
-import requests
 
 class BanDetails:
     def __init__(self, ban_info) -> None:
