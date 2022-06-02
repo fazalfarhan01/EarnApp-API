@@ -83,17 +83,24 @@ All additional arguements are passed on to the `requests.method` call.
         `windows_devices` | Number of Windows devices.
         `linux_devices` | Number of Linux devices.
         `other_devices` | Number of other type of devices.
-        `total_bandwidth_usage` | Shows bandwidth usage of all devices combined
+        `total_bandwidth_usage` | Shows bandwidth usage of all devices combined in bytes.
+        `total_bandwidth_usage_formatted` | Shows bandwidth usage of all devices combined as friendly string e.g. 2.4GB.
 
     - The object `Device` has the following attributes.
 
         Attribute | Description
         --- | ---
         `uuid` | UUID of the device.
-        `bandwidth_usage` | Unredeemed bandwidth usage.
-        `total_bandwidth_usage` | Total bandwidth usage.
-        `redeemed_bandwidth` | Redeemed bandwidth usage.
+        `name` | Name of the device.
+        `bandwidth_usage` | Unredeemed bandwidth usage in bytes.
+        `bandwidth_usage_formatted` | Unredeemed bandwidth usage as friendly string e.g. 2.4GB.
+        `total_bandwidth_usage` | Total bandwidth usage in bytes.
+        `total_bandwidth_usage_formatted` | Total bandwidth usage as friendly string e.g. 2.4GB.
+        `redeemed_bandwidth` | Redeemed bandwidth usage in bytes.
+        `redeemed_bandwidth_formatted` | Redeemed bandwidth usage as friendly string e.g. 2.4GB.
         `rate` | Price/GB of the device.
+        `earned` | Unredeemed earnings for this device.
+        `earned_total` | Total earnings for this device.
         `country` | Country of the device.
         `device_type` | Type of device. (win/node/`None`)
 
@@ -166,7 +173,7 @@ All additional arguements are passed on to the `requests.method` call.
     ```python
     redeem_to_paypal(paypal_email = 'someone@example.com')
     ```
-    - Returns `true` on successfull redeem, else `False`.
+    - Returns `true` on successful redeem, else `False`.
 
 
 ---
