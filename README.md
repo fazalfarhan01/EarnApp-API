@@ -91,7 +91,7 @@ All additional arguements are passed on to the `requests.method` call.
         --- | ---
         `uuid` | UUID of the device.
         `bandwidth_usage` | Unredeemed bandwidth usage.
-        `total_bandwidth` | Total bandwindth usage.
+        `total_bandwidth_usage` | Total bandwidth usage.
         `redeemed_bandwidth` | Redeemed bandwidth usage.
         `rate` | Price/GB of the device.
         `country` | Country of the device.
