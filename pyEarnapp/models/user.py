@@ -6,3 +6,4 @@ class UserData:
         self.name = json_user_data.get("name", None)
         self.email = json_user_data.get("email", None)
         self.referral_code = json_user_data.get("referral_code", None)
+        self.onboarding = json_user_data.get("onboarding", None)
