@@ -45,6 +45,7 @@ All additional arguements are passed on to the `requests.method` call.
         `last_name` | User's last name
         `name` | User's full name
         `email` | User's login email
+        `onboarding` | User's registration timestamp
 
 
 2. Get information on user's earnings.
