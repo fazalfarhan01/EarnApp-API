@@ -1,6 +1,9 @@
-from ..report import report_banned_ip
 import re
 from typing import List
+
+from ..report import report_banned_ip
+from ..tools import format_bytes
+
 
 class BanDetails:
     def __init__(self, ban_info) -> None:
@@ -17,16 +20,22 @@ class BanDetails:
 
 
 class Device:
-    def __init__(self, json_device_info: dict):
+    def __init__(self, json_device_info: dict):        
+        self.name = json_device_info.get("title", "Error retrieving Name")
         self.uuid = json_device_info.get("uuid", "Error retrieving UUID")
         self.bandwidth_usage = json_device_info.get("bw", 0)
+        self.bandwidth_usage_formatted = format_bytes(self.bandwidth_usage)
         self.total_bandwidth_usage = json_device_info.get(
-            "total_bw", "Error retrieving total bandwidth")
+            "total_bw", 0)
+        self.total_bandwidth_usage_formatted = format_bytes(self.total_bandwidth_usage)
         self.redeemed_bandwidth = json_device_info.get(
-            "redeem_bw", "Error retrieving redeemed bandwidth")
+            "redeem_bw", 0)
+        self.redeemed_bandwidth_formatted = format_bytes(self.redeemed_bandwidth)
         self.rate = json_device_info.get("rate", "Error retrieving rate")
         self.country = json_device_info.get("cn", "UnKnown")
         self.device_type = re.findall('sdk-([a-zA-Z0-9]*)-', self.uuid)[0]
+        self.earned = json_device_info.get("earned", 0)
+        self.earned_total = json_device_info.get("earned_total", 0)
         self.banned = BanDetails(json_device_info.get('banned', False))
 
 
@@ -58,6 +67,8 @@ class DevicesInfo:
                 self.banned_ip_addresses.append(device.banned.ip)
         if report_ip_ban:
             report_banned_ip(self.banned_ip_addresses)
+        
+        self.total_bandwidth_usage_formatted = format_bytes(self.total_bandwidth_usage)
 
     def get_devices(self) -> List[Device]:
         return self.devices
