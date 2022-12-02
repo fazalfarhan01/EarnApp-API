@@ -5,5 +5,5 @@ class Headers:
             ('appid', 'earnapp_dashboard'),
         )
         self.header = {
-            'cookie': f'auth=1; auth-method=google; oauth-refresh-token={auth_refresh_token}'
+            'cookie': f'auth=1; auth-method=google; oauth-token={auth_refresh_token}'
         }
